@@ -65,7 +65,7 @@ function calcularGastoTotal() {
         2020: 0
     }
 
-    // Mapea gastosJSON a un array de objetos GastoCombustible, esto facilita las comparativas de fecha.
+    // Mapea gastosJSON a objetos GastoCombustible, facilita las comparativas de fecha.
     const gastos = gastosJSON.map(gasto => new GastoCombustible(
         gasto.vehicleType, 
         gasto.date, 
@@ -73,23 +73,26 @@ function calcularGastoTotal() {
         gasto.precioViaje)
     )
 
-    // Recorre el array de años para calcular y almacenar los gastos de cada año
+    // Recorre el array de gastos y los acumula en el array de años
+    for (let gasto of gastos) {
+
+        // Obtiene el año del gasto
+        const anioCoste = gasto.date.getFullYear();
+
+        // Acumula el gasto en el año correspondiente
+        aniosArray[anioCoste] += parseFloat(gasto.precioViaje);
+    }
+
+    // Recorre el array de años y pinta los gastos totales en HTML
     for (let anio in aniosArray) {
+    
+        // Fuerza un redondeo a dos decimales
+        aniosArray[anio] = (Math.round(aniosArray[anio] * 100) / 100).toFixed(2);
 
-        // Filtra los objetos por el año que se está iterando
-        const resultados = gastos.filter(elemento => elemento.date.getFullYear() == anio)
-
-        // Acumula los gastos del año en el array de totales
-        for (let gasto in resultados) {
-            aniosArray[anio] += parseFloat(resultados[gasto].precioViaje)
-        }
-
-        // Fuerza el resultado final a un redondeo de dos decimales
-        aniosArray[anio] = (Math.round(aniosArray[anio] * 100) / 100).toFixed(2)
-
-        // Una vez terminados los cálculos, muestra el gasto total en el HTML
+        // Muestra el gasto total en el HTML
         document.getElementById('gasto' + anio).innerText = aniosArray[anio] + " €";
     }
+    
 }
 
 // guardar gasto introducido y actualizar datos
@@ -124,8 +127,15 @@ function guardarGasto(event) {
 function calcularPrecioViaje(tipoVehiculo, fecha, kilometros) {
     // Extrae el año de la fecha
     const anio = fecha.getFullYear();
-    // Filtra el array de tarifas por el año y recoge el precio para el tipo de vehículo
-    const coste =  tarifasJSON.tarifas.find((anio) => anio == anio).vehiculos[tipoVehiculo];
+
+    // En esta variable se guardará el coste/km correspondiente
+    let costeKm;
+
+    // Recorre las tarifas y guarda la correspondiente al año y vehículo
+    for (let tarifa of tarifasJSON.tarifas) {
+        if (tarifa.anio === anio) costeKm = parseFloat(tarifa.vehiculos[tipoVehiculo]);
+    }
+
     // Calcula y devuelve el precio del viaje redondeando
-    return Math.round((coste * kilometros) * 100) / 100;
+    return Math.round((costeKm * kilometros) * 100) / 100;
 }
