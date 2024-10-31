@@ -73,7 +73,7 @@ function calcularGastoTotal() {
         gasto.precioViaje)
     )
 
-    // Recorre el array de gastos y los acumula en el array de años
+    // Recorre el array de gastos y acumula los importes en el array de años.
     for (let gasto of gastos) {
 
         // Obtiene el año del gasto
@@ -83,14 +83,14 @@ function calcularGastoTotal() {
         aniosArray[anioCoste] += parseFloat(gasto.precioViaje);
     }
 
-    // Recorre el array de años y pinta los gastos totales en HTML
+    // Recorre el array de años, redondea los totales y los pinta en el documento.
     for (let anio in aniosArray) {
     
         // Fuerza un redondeo a dos decimales
-        aniosArray[anio] = (Math.round(aniosArray[anio] * 100) / 100).toFixed(2);
+        const total = (Math.round(aniosArray[anio] * 100) / 100).toFixed(2);
 
         // Muestra el gasto total en el HTML
-        document.getElementById('gasto' + anio).innerText = aniosArray[anio] + " €";
+        document.getElementById('gasto' + anio).innerText = total + " €";
     }
     
 }
@@ -104,7 +104,7 @@ function guardarGasto(event) {
     const fecha = new Date(document.getElementById('date').value);
     const kilometros = parseFloat(document.getElementById('kilometers').value);
 
-    // Asigna a precioViaje el gasto calculado 
+    // Asigna a precioViaje el gasto calculado.
     const precioViaje = calcularPrecioViaje(tipoVehiculo, fecha, kilometros);
 
     // Genera un nuevo GastoCombustible a partir de todos los datos recogidos
@@ -125,6 +125,7 @@ function guardarGasto(event) {
 
 // Obtiene el precioViaje de un gasto a partir de las tarifas
 function calcularPrecioViaje(tipoVehiculo, fecha, kilometros) {
+
     // Extrae el año de la fecha
     const anio = fecha.getFullYear();
 
@@ -136,6 +137,6 @@ function calcularPrecioViaje(tipoVehiculo, fecha, kilometros) {
         if (tarifa.anio === anio) costeKm = parseFloat(tarifa.vehiculos[tipoVehiculo]);
     }
 
-    // Calcula y devuelve el precio del viaje redondeando
+    // Calcula y devuelve el precio del viaje redondeado
     return Math.round((costeKm * kilometros) * 100) / 100;
 }
