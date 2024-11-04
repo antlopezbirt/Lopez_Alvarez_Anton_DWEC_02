@@ -123,20 +123,24 @@ function guardarGasto(event) {
     document.getElementById('fuel-form').reset();
 }
 
-// Obtiene el precioViaje de un gasto a partir de las tarifas
+// Devuelve el precio de un viaje usando tarifasJSON
 function calcularPrecioViaje(tipoVehiculo, fecha, kilometros) {
 
     // Extrae el año de la fecha
     const anio = fecha.getFullYear();
 
-    // En esta variable se guardará el coste/km correspondiente
-    let costeKm;
-
-    // Recorre las tarifas y guarda la correspondiente al año y vehículo
+    // Recorre las tarifas y devuelve el precio calculado
     for (let tarifa of tarifasJSON.tarifas) {
-        if (tarifa.anio === anio) costeKm = parseFloat(tarifa.vehiculos[tipoVehiculo]);
+        if (tarifa.anio === anio) {
+
+            // En esta variable se guarda el coste/km correspondiente
+            const costeKm = parseFloat(tarifa.vehiculos[tipoVehiculo]);
+
+            // Calcula y devuelve el precio del viaje redondeado
+            return Math.round((costeKm * kilometros) * 100) / 100;
+        }
     }
 
-    // Calcula y devuelve el precio del viaje redondeado
-    return Math.round((costeKm * kilometros) * 100) / 100;
+    // Si llega hasta aquí es que no se ha encontrado la tarifa
+    return false;
 }
