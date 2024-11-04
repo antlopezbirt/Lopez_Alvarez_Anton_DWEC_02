@@ -9,6 +9,7 @@ class GastoCombustible {
         this.precioViaje = precio;
     }
 
+    // Serialización del objeto
     convertToJSON() {
         const serializado = JSON.stringify({vehicleType: this.vehicleType, 
                                             date: this.date,

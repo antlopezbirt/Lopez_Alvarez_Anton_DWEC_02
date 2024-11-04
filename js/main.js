@@ -65,19 +65,11 @@ function calcularGastoTotal() {
         2020: 0
     }
 
-    // Mapea gastosJSON a objetos GastoCombustible, facilita las comparativas de fecha.
-    const gastos = gastosJSON.map(gasto => new GastoCombustible(
-        gasto.vehicleType, 
-        gasto.date, 
-        gasto.kilometers, 
-        gasto.precioViaje)
-    )
-
     // Recorre el array de gastos y acumula los importes en el array de años.
-    for (let gasto of gastos) {
+    for (let gasto of gastosJSON) {
 
         // Obtiene el año del gasto
-        const anioCoste = gasto.date.getFullYear();
+        const anioCoste = new Date(gasto.date).getFullYear();
 
         // Acumula el gasto en el año correspondiente
         aniosArray[anioCoste] += parseFloat(gasto.precioViaje);
