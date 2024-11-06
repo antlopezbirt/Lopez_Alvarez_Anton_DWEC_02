@@ -119,11 +119,15 @@ function guardarGasto(event) {
 function calcularPrecioViaje(tipoVehiculo, fecha, kilometros) {
 
     // Extrae el año de la fecha
-    const anio = fecha.getFullYear();
+    const anioForm = fecha.getFullYear();
+
+    // Esta sería la solución con find(), que me parece menos legible
+    // const costeKm = tarifasJSON.tarifas.find(({ anio }) => anio === anioForm).vehiculos[tipoVehiculo];
+    // return Math.round((costeKm * kilometros) * 100) / 100;
 
     // Recorre las tarifas y devuelve el precio calculado
     for (let tarifa of tarifasJSON.tarifas) {
-        if (tarifa.anio === anio) {
+        if (tarifa.anio === anioForm) {
 
             // En esta variable se guarda el coste/km correspondiente
             const costeKm = parseFloat(tarifa.vehiculos[tipoVehiculo]);
